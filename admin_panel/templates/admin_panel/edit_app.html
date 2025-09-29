@@ -1,0 +1,14 @@
+{%  extends "admin_panel/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Edit App: {{app.name}}</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    <br>
+    <a href="{url 'edit_app' app.id %}">Back to App List</a>
+</div>
+{% endblock %}

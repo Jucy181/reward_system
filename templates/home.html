@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Welcome to the Reward System</h2>
+<p>This is your homepage.</p>
+
+{% if user.is_authenticated %}
+<p>Hello <strong>{{ user.username}}</strong></p>
+<p>You can check your<a href="{% url 'core:profile' %}">profile</a>to see your points</p>
+{% else %}
+<p>Please <a href="{% url 'users:login' %}">login</a>  or  <a href="{% url 'users:signup'%}">signup</a> to get started.</p>
+{% endif %}
+{% endblock %}

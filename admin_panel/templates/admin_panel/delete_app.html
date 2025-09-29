@@ -1,0 +1,14 @@
+{% extends "admin_panel/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Delete App</h2>
+    <p>Are you sure you want to delete <strong>{{app.name}}</strong></p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Yes,Delete</button>
+    </form>
+    <br>
+    <a href="{% url 'delete_app' app.id %}">Cancel</a>
+</div>
+{% endblock %}

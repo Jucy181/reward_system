@@ -1,0 +1,91 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<h2>Pending Submissions</h2>
+<table border="1" cellpadding="5" cellspacing="0">
+    <tr>
+        <th>User</th>
+        <th>App</th>
+        <th>Screenshot</th>
+        <th>Submitted At</th>
+        <th>Actions</th>
+    </tr>
+    {% for sub in pending %}
+    <tr>
+        <td>{{ sub.user.username }}</td>
+        <td>{{ sub.app.name }}</td>
+        <td>
+            {% if sub.screenshot %}
+                <a href="{{ sub.screenshot.url }}" target="_blank">View</a>
+             {% else %}
+                No screenshot
+             {% endif %}
+        </td>
+        <td>{{ sub.submitted_at }}</td>
+        <td>
+           <button class="btn btn-success btn-sm action-btn"
+                   data-bs-toggle="modal"
+                   data-bs-target="#confirmModal"
+                   data-action="{% url 'admin_panel:approve_submission' pk=sub.id %}"
+                   data-message="Are you sure you want to approve this submission?">
+               Approve
+           </button>
+
+            <button class="btn btn-danger btn-sm action-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmModal"
+                    data-action="{% url 'admin_panel:reject_submission' pk=sub.id %}"
+                    data-message="Are you sure you want to reject and delete this submission?">
+                Reject
+            </button>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No approved submissions.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="modal fade" id="confirmModal" tabindex="1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                    <div class="modal-body">
+                        <p id="confirmMessage">Are you sure?</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <form id="confirmForm" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Yes,Proceed</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+    <script>
+        document.addEventListener("DOMContentLoaded",function() {
+        const modal = document.getElementById("confirmModal");
+        const confirmForm = document.getElementById("confirmForm");
+        const confirmMessage = document.getElementById("confirmMessage");
+
+        modal.addEventListener("show.bs.modal",function (event) {
+        const button = event.relatedTarget;
+        const actionUrl = button.getAttribute("data-action");
+        const message = button.getAttribute("data-message");
+
+        confirmForm.setAttribute("action",actionUrl);
+        confirmMessage.textContent = message;
+      });
+   });
+    </script>
+
+{% endblock %}

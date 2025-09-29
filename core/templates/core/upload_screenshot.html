@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Screenshot</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body>
+    <div id="drop-area">
+        <h3>Drag & Drop Screenshot Here</h3>
+        <input type="file" id="fileElem" accept="image/*" style="display:none">
+        <button onclick="document.getElementById('fileElem').click()">Select File</button>
+    </div>
+
+    <script src="{% static 'core/js/drag_drop.js' %}"></script>
+</body>
+</html>
