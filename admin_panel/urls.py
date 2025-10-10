@@ -14,4 +14,6 @@ urlpatterns = [
     path('submissions/reject/<int:pk>/', views.reject_submission, name='reject_submission'),
     path('login/', views.admin_login, name='login'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('admin/logout/', views.admin_logout, name='admin_logout'),
+
 ]

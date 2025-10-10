@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reward System</title>
+
+    <!-- Base CSS -->
+    <style>
+        /* Navbar styling */
+        nav {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+        }
+        nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Container for page content */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Status colors */
+        .status-approved {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        /* Links */
+        a {
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Drag-and-drop styling (for Submit Screenshot) */
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f9f9f9;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        #drop-area.hover {
+            border-color: #2c3e50;
+            background: #e8f0fe;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #34495e;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        {% if user.is_authenticated %}
+             Welcome, {{ user.username }} |
+         {% endif %}
+        <a href="{% url 'users:dashboard' %}">Dashboard</a>
+        <a href="{% url 'users:profile' %}">Profile</a>
+        <a href="{% url 'users:submit_screenshot' %}">Submit Screenshot</a>
+        <a href="{% url 'users:user_submissions' %}">My Submissions</a>
+        <a href="{% url 'users:logout' %}">Logout</a>
+    </nav>
+
+    <!-- Page-specific content -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

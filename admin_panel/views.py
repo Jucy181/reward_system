@@ -1,19 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-
-from .forms import AppForm
+from admin_panel.forms import AppForm
 from core.models import App, Submission, UserProfile
 
 staff_required = user_passes_test(lambda u: u.is_staff, login_url='admin_panel:login')
-
-
-# Create your views here.
-def dashboard(request):
-    apps = App.objects.all().order_by('created_at')
-    return render(request, 'admin_panel/dashboard.html')
 
 
 def add_app(request):
@@ -128,3 +121,8 @@ def admin_login(request):
         else:
             messages.error(request, "Invalid credentials or not staff ")
     return render(request, 'admin_panel/login.html')
+
+
+def admin_logout(request):
+    logout(request)
+    return redirect('admin_panel:login')

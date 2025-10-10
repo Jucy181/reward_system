@@ -1,12 +1,54 @@
 #drop-area {
     border: 2px dashed #ccc;
-    padding: 20px;
+    padding: 30px;
     text-align: center;
-    margin: 20px 0;
-    border-radius: 10px;
+    margin: 20px auto;
+    border-radius: 12px;
+    max-width: 500px;
+    background-color: #fafafa;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 #drop-area.highlight {
-    border-color: purple;
+    border-color: #6c5ce7;
     background-color: #f0e5ff;
+}
+
+/* Button styling */
+#drop-area button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#drop-area button:hover {
+    background-color: #341f97;
+}
+
+/* Gallery previews */
+#gallery {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#gallery img {
+    width: 150px;
+    height: auto;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    object-fit: cover;
+    transition: transform 0.2s;
+}
+
+#gallery img:hover {
+    transform: scale(1.05);
 }

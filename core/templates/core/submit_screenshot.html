@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Submit Screenshot</h2>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" action="{% url 'upload_screenshot_page' %}">
     {% csrf_token %}
     {{  form.as_p }}
     <button type="submit">Submit</button>

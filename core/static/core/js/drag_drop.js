@@ -1,10 +1,21 @@
 // drag_drop.js
 
 let dropArea = document.getElementById("drop-area");
+let gallery = document.getElementById("gallery");
+
+// Prevent default browser behavior for drag/drop on dropArea AND document
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
 
 // Highlight drop area when file is over
-dropArea.addEventListener("dragover", (e) => {
-    e.preventDefault();
+dropArea.addEventListener("dragover", () => {
     dropArea.classList.add("highlight");
 });
 
@@ -15,43 +26,66 @@ dropArea.addEventListener("dragleave", () => {
 
 // Handle file drop
 dropArea.addEventListener("drop", (e) => {
-    e.preventDefault();
     dropArea.classList.remove("highlight");
-
-    const files = e.dataTransfer.files;
+    let files = e.dataTransfer.files;
     handleFiles(files);
 });
 
-// Handle file selection
+// Handle file selection via button
 document.getElementById("fileElem").addEventListener("change", (e) => {
     handleFiles(e.target.files);
 });
 
-// Function to handle files
+// Handle files: show preview and upload
 function handleFiles(files) {
     for (let i = 0; i < files.length; i++) {
-        console.log("File dropped:", files[i].name);
-         formData.append('screenshot', file);
-        formData.append('app_name', 'Example App'); // Replace dynamically if needed
+        let file = files[i];
 
-        fetch('/api/upload-screenshot/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken') // Important for CSRF
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => console.log('Upload success:', data))
-        .catch(error => console.error('Upload error:', error));
+        // Show preview
+        previewFile(file);
+
+        // Upload to Django
+        uploadFile(file);
     }
 }
+
+// Function to show image preview
+function previewFile(file) {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = function() {
+        let img = document.createElement('img');
+        img.src = reader.result;
+        gallery.appendChild(img);
+    }
+}
+
+// Function to upload file to Django
+function uploadFile(file) {
+    let formData = new FormData();
+    formData.append('screenshot', file);
+    formData.append('app_name', 'Example App'); // replace dynamically if needed
+
+    fetch('/api/upload-screenshot/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken') // CSRF for Django
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => console.log('Upload success:', data))
+    .catch(error => console.error('Upload error:', error));
+}
+
+// Function to get CSRF token from cookies
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
+        let cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
+            let cookie = cookies[i].trim();
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;

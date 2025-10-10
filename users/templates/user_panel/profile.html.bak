@@ -1,0 +1,7 @@
+{% extends 'user_panel/base_user.html' %}
+
+{% block content %}
+<h2>Profile</h2>
+<p>Username: {{ request.user.username }}</p>
+<p>Total Points: {{ total_points }}</p>
+{% endblock %}

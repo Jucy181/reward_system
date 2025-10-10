@@ -17,7 +17,36 @@
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Add App</button>
     </form>
-
+    <h3>All Apps</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Points</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in apps %}
+        <tr>
+            <td>{{ app.name }}</td>
+            <td>{{ app.description }}</td>
+            <td>{{ app.points }}</td>
+            <td>{{ app.status }}</td>
+            <td>
+                <a href="{% url 'admin_panel:edit_app' app.id %}">Edit</a> |
+                <a href="{% url 'admin_panel:delete_app' app.id %}">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No apps added yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
     <br>
     <a href="{% url 'admin_panel:custom_admin_dashboard' %}">Back to Dashboard</a>
 </div>

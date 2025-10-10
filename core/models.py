@@ -11,7 +11,6 @@ STATUS_CHOICES = [
 
 ]
 
-
 class App(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -46,23 +45,24 @@ class Submission(models.Model):
         return f"{self.user.username}-{self.app.name}"
 
 
-class AndroidApp(models.Model):
-    name = models.CharField(max_length=255)
-    points = models.PositiveIntegerField(default=0)
-
-
 class TaskCompleted(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    app = models.ForeignKey(AndroidApp, on_delete=models.CASCADE)
+    app = models.ForeignKey(App, on_delete=models.CASCADE)
     screenshot = models.ImageField(upload_to='screenshots/')
     completed_at = models.DateTimeField(auto_now_add=True)
 
 
 class TaskScreenshot(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    app_name = models.CharField(max_length=255)  # Or link to your App model if exists
+    app_name = models.CharField(max_length=255)
     screenshot = models.ImageField(upload_to='screenshots/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.app_name}"
+
+    class Screenshot(models.Model):
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
+        task = models.ForeignKey(TaskCompleted, on_delete=models.CASCADE, related_name='screenshots')
+        image = models.ImageField(upload_to='screenshots/')
+        uploaded_at = models.DateTimeField(auto_now_add=True)

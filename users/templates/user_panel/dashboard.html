@@ -1,0 +1,7 @@
+{% extends 'user_panel/base_user.html' %}
+
+{% block content %}
+<h1>Welcome to the Reward System</h1>
+<p>Hello {{ request.user.username }}</p>
+<p>Total Points Earned: {{ total_points }}</p>
+{% endblock %}

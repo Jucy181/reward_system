@@ -6,8 +6,14 @@
 
 {% if user.is_authenticated %}
 <p>Hello <strong>{{ user.username}}</strong></p>
-<p>You can check your<a href="{% url 'core:profile' %}">profile</a> to see your points</p>
+<p>You can check your<a href="{% url 'core:profile' %}">profile</a>
+     or go to <a href="{% url 'users:dashboard' %}">Dashboard</a>.
+    </p>
+     <form method="post" action="{% url 'users:logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
 {% else %}
-<p>Please <a href="{% url 'login' %}">login</a>or  <a href="{% url 'signup'%}">signup</a>to get started.</p>
+<p>Please <a href="{% url 'users:login' %}">login</a>or  <a href="{% url 'users:signup'%}">signup</a>to get started.</p>
 {% endif %}
 {% endblock %}

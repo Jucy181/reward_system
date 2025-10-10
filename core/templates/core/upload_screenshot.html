@@ -4,14 +4,169 @@
 <head>
     <title>Upload Screenshot</title>
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    <style>
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #drop-area.highlight {
+            border-color: green;
+        }
+        #gallery img {
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #uploaded-screenshots img {
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
+
+{% if messages %}
+    {% for message in messages %}
+        <div style="color: green; font-weight: bold;">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<form id="upload-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label for="app_name">App Name:</label>
+    <input type="text" name="app_name" id="app_name" required>
+    <br><br>
+
     <div id="drop-area">
         <h3>Drag & Drop Screenshot Here</h3>
-        <input type="file" id="fileElem" accept="image/*" style="display:none">
-        <button onclick="document.getElementById('fileElem').click()">Select File</button>
+        <input type="file" name="screenshot" id="fileElem" accept="image/*" style="display:none">
+        <button type="button" onclick="document.getElementById('fileElem').click()">Select File</button>
+        <div id="gallery"></div>
     </div>
+</form>
 
-    <script src="{% static 'core/js/drag_drop.js' %}"></script>
+<hr>
+<h3>My Uploaded Screenshots</h3>
+<ul id="uploaded-screenshots">
+{% for screenshot in screenshots %}
+    <li>
+        <strong>{{ screenshot.app_name }}</strong> -
+        <img src="{{ screenshot.screenshot.url }}" width="150">
+        (Uploaded at: {{ screenshot.uploaded_at|date:"Y-m-d H:i" }})
+    </li>
+{% empty %}
+    <li>No screenshots uploaded yet.</li>
+{% endfor %}
+</ul>
+
+<script>
+const dropArea = document.getElementById('drop-area');
+const fileInput = document.getElementById('fileElem');
+const form = document.getElementById('upload-form');
+const gallery = document.getElementById('gallery');
+const uploadedList = document.getElementById('uploaded-screenshots');
+
+// Highlight drop area when dragging
+['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropArea.classList.add('highlight');
+    });
+});
+['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('highlight');
+    });
+});
+
+// Handle dropped files
+dropArea.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        fileInput.files = files;
+        previewFiles(files);
+        uploadFiles(files);
+    }
+});
+
+// Handle file select via button
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) {
+        previewFiles(fileInput.files);
+        uploadFiles(fileInput.files);
+    }
+});
+
+// Preview images
+function previewFiles(files) {
+    gallery.innerHTML = '';
+    Array.from(files).forEach(file => {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.width = 150;
+        gallery.appendChild(img);
+    });
+}
+
+// Upload files via AJAX
+function uploadFiles(files) {
+    const appName = document.getElementById('app_name').value;
+    if (!appName) {
+        alert('Please enter App Name');
+        return;
+    }
+
+    const ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU5MzAzMDQxLCJpYXQiOjE3NTkzMDI3NDEsImp0aSI6IjQ0NzI1NzFiZTc1MTRlZDQ4ZTJkYjc0MWQ1YzBlYjM3IiwidXNlcl9pZCI6IjUifQ.V5Oi5fOnpaQ9Yh7xAGNs6SbtmoRI-hfHkURlbvLKGRs";
+    const formData = new FormData();
+    formData.append('app_name', appName);
+    formData.append('screenshot', files[0]);
+
+    fetch('/api/screenshots/upload/', {
+    method: 'POST',
+    headers: {
+        'Authorization': `Bearer ${ACCESS_TOKEN}`
+    },
+    body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);
+              console.log(data.screenshot);
+    } else {
+        console.error(data);
+    }
+});
+
+            // Dynamically add to uploaded screenshots list
+            const li = document.createElement('li');
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(files[0]);
+            img.width = 150;
+
+            li.innerHTML = `<strong>${appName}</strong> - `;
+            li.appendChild(img);
+            li.innerHTML += ` (Uploaded just now)`;
+            uploadedList.prepend(li);
+
+
+            gallery.innerHTML = '';
+            fileInput.value = '';
+            document.getElementById('app_name').value = '';
+        } else if (data.error) {
+            alert(data.error);
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
+
 </body>
 </html>

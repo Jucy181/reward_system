@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import App, Submission, UserProfile, TaskCompleted
-from .models import UserProfile
-from .models import TaskScreenshot
+from .models import App, Submission, UserProfile, TaskCompleted, TaskScreenshot
 
 
 class AppSerializer(serializers.ModelSerializer):
@@ -18,7 +16,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    tasks_completed = serializers.IntegerField(source='tasks_completed', read_only=True)
+    tasks_completed = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = UserProfile
@@ -57,3 +55,31 @@ class TaskScreenshotSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskScreenshot
         fields = ['id', 'user', 'app_name', 'screenshot', 'uploaded_at']
+        read_only_fields = ['user', 'uploaded_at']
+
+    def validate_screenshot(self, value):
+        if not value.name.lower().endswith(('.png', '.jpg', '.jpeg')):
+            raise serializers.ValidationError("Only PNG/JPG images are allowed.")
+        return value
+
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        user = getattr(request, 'user', None)
+        if user is None:
+            user = User.objects.first()
+        return TaskScreenshot.objects.create(user=user, **validated_data)
+
+
+class ScreenshotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskScreenshot
+        fields = ['app_name', 'screenshot', 'uploaded_at']
+        read_only_fields = ['uploaded_at']
+
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        user = getattr(request, 'user', None)
+        if not user or not user.is_authenticated:
+            user = User.objects.first()
+
+        return TaskScreenshot.objects.create(user=user, **validated_data)

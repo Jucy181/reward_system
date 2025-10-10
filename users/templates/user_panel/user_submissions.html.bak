@@ -1,0 +1,38 @@
+{% extends 'user_panel/base_user.html' %}
+
+{% block content %}
+
+<h2>My Submissions</h2>
+<p>Total Points Earned: {{ total_points }}</p>
+
+<table>
+    <tr>
+        <th>App Name</th>
+        <th>Screenshot</th>
+        <th>Status</th>
+        <th>Submitted At</th>
+    </tr>
+    {% for sub in submissions %}
+    <tr>
+        <td>{{ sub.app.name }}</td>
+        <td>
+            {% if sub.screenshot %}
+                <img src="{{ sub.screenshot.url }}" width="100" alt="Screenshot">
+            {% else %}
+                No Screenshot
+            {% endif %}
+        </td>
+
+         <td class="status-{{ sub.approved|yesno:"approved,pending" }}">
+            {% if sub.approved %}Approved{% else %}Pending{% endif %}
+        </td>
+
+        <td>{{ sub.submitted_at|date:"M d, Y, h:i a" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">You have not submitted any screenshots yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
