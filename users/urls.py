@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('submit-screenshot/', views.submit_screenshot, name='submit_screenshot'),
     path('dashboard/', views.user_dashboard, name='dashboard'),
     path('logout/', views.custom_logout, name='logout'),
+    path('users/', include('users.urls', namespace='users')),
 ]
