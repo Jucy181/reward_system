@@ -33,7 +33,7 @@ All features are also available via REST APIs with proper authentication, permis
 1. **Clone the repository**
 
 ```bash
-git clone https://gitlab.com/your-username/reward_system.git
+git clone:https://github.com/Jucy181/reward_system.git
 cd reward_system
 
 2.**Create a virtual environment**
@@ -83,7 +83,7 @@ Open a merge request for review
 ## Author
 
 Jucy Abraham
- GitLab: https://gitlab.com/Jucy97
+ GitHub: https://github.com/Jucy181/reward_system.git
 
 ## License
 
@@ -96,8 +96,8 @@ The Reward System was deployed on **Render** (https://my-first-project-2-wvkv.on
 
 ### Steps for Deployment:
 
-1. Push code to GitLab.
-2. Connect Render to GitLab repository.
+1. Push code to GitHub.
+2. Connect Render to GitHub repository.
 3. Choose **Manual Deploy → Deploy latest commit**.
 4. Render installs dependencies and runs the project with Gunicorn.
 5. The live app is available at: https://my-first-project-2-wvkv.onrender.com
@@ -106,22 +106,4 @@ The Reward System was deployed on **Render** (https://my-first-project-2-wvkv.on
 - Free instances may spin down with inactivity, causing slow initial requests.
 - Paid plans recommended for production stability.
 
-### Problem Set I – Regex
 
-Solution available in [`regex_solution.py`](regex_solution.py)
-
-
-## Problem 3:
-
-### A. Scheduling Periodic Tasks
-
-I chose **Celery with Django** to schedule periodic tasks (like downloading ISINs every 24 hours) because it supports cron-like scheduling, retries, and asynchronous execution.
-
-**Reliability & scalability:** Works well with Redis/RabbitMQ and can scale with multiple workers.
-**Limitations: Managing many workers and brokers can be complex.
-**Alternative at scale: Use AWS Lambda / Google Cloud Tasks or Kubernetes auto-scaling.
-
-### B. Flask vs Django
-
-**Flask:** Lightweight, flexible, good for small projects or microservices.
-**Django:** Full-featured, structured, ideal for large apps with built-in auth, admin, and ORM.
