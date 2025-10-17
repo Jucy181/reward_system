@@ -92,7 +92,7 @@ MIT License © 2025 Jucy Abraham
 
 ## Deployment 
 
-The Reward System was deployed on **Render** (https://my-first-project-2-wvkv.onrender.com).  
+The Reward System was deployed on **Render** (https://reward-system-o22w.onrender.com).  
 
 ### Steps for Deployment:
 
@@ -100,7 +100,7 @@ The Reward System was deployed on **Render** (https://my-first-project-2-wvkv.on
 2. Connect Render to GitHub repository.
 3. Choose **Manual Deploy → Deploy latest commit**.
 4. Render installs dependencies and runs the project with Gunicorn.
-5. The live app is available at: https://my-first-project-2-wvkv.onrender.com
+5. The live app is available at:https://reward-system-o22w.onrender.com
 
 **Notes:**
 - Free instances may spin down with inactivity, causing slow initial requests.
